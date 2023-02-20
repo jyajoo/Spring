@@ -10,8 +10,7 @@ public class JwtProvider {
 
   private final SecretKey secretKey;
 
-  // private인 _getSecretKey 함수가 단 한 번만 실행되도록 함
-  public SecretKey getSecretKey() {
+  private SecretKey getSecretKey() {
     return secretKey;
   }
 }

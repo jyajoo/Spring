@@ -43,7 +43,7 @@ class JWTTest {
 	@Test
 	@DisplayName("JwtProvider 객체로 SecretKey 객체 생성")
 	void t3() {
-		SecretKey secretKey = jwtProvider.getSecretKey();
+		SecretKey secretKey = TestUtil.callMethod(jwtProvider, "getSecretKey");
 		assertThat(secretKey).isNotNull();
 	}
 }
