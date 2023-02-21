@@ -55,4 +55,10 @@ class JWTTest {
 
 		assertThat(secretKey1).isSameAs(secretKey2);
 	}
+
+	@Test
+	@DisplayName("accessToken 얻기")
+	void t5() {
+
+	}
 }
