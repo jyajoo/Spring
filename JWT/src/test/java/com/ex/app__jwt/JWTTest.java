@@ -46,4 +46,13 @@ class JWTTest {
 		SecretKey secretKey = TestUtil.callMethod(jwtProvider, "getSecretKey");
 		assertThat(secretKey).isNotNull();
 	}
+
+	@Test
+	@DisplayName("SecretKey 객체는 하나뿐이다.")
+	void t4() {
+		SecretKey secretKey1 = TestUtil.callMethod(jwtProvider, "getSecretKey");
+		SecretKey secretKey2 = TestUtil.callMethod(jwtProvider, "getSecretKey");
+
+		assertThat(secretKey1).isSameAs(secretKey2);
+	}
 }
