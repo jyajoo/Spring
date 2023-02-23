@@ -4,13 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ex.app__jwt.jwt.JwtProvider;
 import io.jsonwebtoken.security.Keys;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import javax.crypto.SecretKey;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @SpringBootTest
 class JWTTest {
@@ -59,6 +63,17 @@ class JWTTest {
 	@Test
 	@DisplayName("accessToken 얻기")
 	void t5() {
+		// 회원 번호 : 1, username : admin, role : MEMBER & ADMIN
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("id", 1);
+		claims.put("usename", "admin");
+		claims.put("authorities", Arrays.asList(
+				new SimpleGrantedAuthority("MEMBER"),
+				new SimpleGrantedAuthority("ADMIN")
+		));
 
+		String accessToken = jwtProvider.generateAccessToken(claims, 60 * 60 * 5);
+		System.out.println(accessToken);
+		assertThat(accessToken).isNotNull();
 	}
 }
