@@ -73,7 +73,26 @@ class JWTTest {
 		));
 
 		String accessToken = jwtProvider.generateAccessToken(claims, 60 * 60 * 5);
-		System.out.println(accessToken);
+		System.out.println("accessToken : " + accessToken);
 		assertThat(accessToken).isNotNull();
+	}
+
+	@Test
+	@DisplayName("accessToken으로 claims 얻기")
+	void t6() {
+		// 회원 번호 : 1, username : admin, role : MEMBER & ADMIN
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("id", 1);
+		claims.put("usename", "admin");
+		claims.put("authorities", Arrays.asList(
+				new SimpleGrantedAuthority("MEMBER"),
+				new SimpleGrantedAuthority("ADMIN")
+		));
+		String accessToken = jwtProvider.generateAccessToken(claims, 60 * 60 * 5);
+
+		assertThat(jwtProvider.verify(accessToken)).isTrue();
+
+		System.out.println("accessToken : " + accessToken);
+		System.out.println("claimsFromToken : " + jwtProvider.getClaims(accessToken));
 	}
 }

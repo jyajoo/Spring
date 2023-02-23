@@ -1,5 +1,7 @@
 package com.ex.app__jwt.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -27,5 +29,26 @@ public class JwtProvider {
             .setExpiration(accessExpireTime)
             .signWith(getSecretKey(), SignatureAlgorithm.HS512)
             .compact();
+  }
+
+  public boolean verify(String token) {
+    try {
+      Jws<Claims> claimsJws = Jwts.parserBuilder()
+          .setSigningKey(getSecretKey())
+          .build()
+          .parseClaimsJws(token);
+
+      return !claimsJws.getBody().getExpiration().before(new Date());
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  public Claims getClaims(String token) {
+    return Jwts.parserBuilder()
+        .setSigningKey(getSecretKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
   }
 }
