@@ -1,5 +1,6 @@
 package com.example.jwt_restapi.member.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
   @PostMapping("/login")
-  public String login(@RequestBody LoginDto loginDto) {
+  public String login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+    response.setHeader("Authentication", "JWT 토큰");
     return "username : %s, password : %s".formatted(loginDto.getUsername(), loginDto.getPassword());
   }
 
