@@ -1,6 +1,9 @@
 package com.example.jwt_restapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
@@ -12,11 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -31,39 +29,64 @@ class JwtRestapiApplicationTests {
   @Test
   @DisplayName("POST /member/login 은 로그인 처리 URL")
   void t1() throws Exception {
-    ResultActions resultActions = mvc.perform(
-        MockMvcRequestBuilders.post("/member/login")
+    mvc.perform(post("/member/login")
             .content("""
                 {
                   "username" : "user1",
                   "password" : "1234"
                 }
                 """.stripIndent())
-            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
-    ).andDo(MockMvcResultHandlers.print());
-
-    resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+        .andDo(print())
+        .andExpect(status().is2xxSuccessful());
   }
 
   @Test
   @DisplayName("POST /member/login의 ok 응답으로 JWT 발급")
   void t2() throws Exception {
-    ResultActions resultActions = mvc.perform(
-        MockMvcRequestBuilders.post("/member/login")
-            .content("""
-                {
-                  "username" : "user1",
-                  "password" : "1234"
-                }
-                """.stripIndent())
-            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
-    ).andDo(MockMvcResultHandlers.print());
+    MockHttpServletResponse response = mvc.perform(
+            post("/member/login")
+                .content("""
+                    {
+                      "username" : "user1",
+                      "password" : "1234"
+                    }
+                    """.stripIndent())
+                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+        .andDo(print())
+        .andExpect(status().is2xxSuccessful())
+        .andReturn().getResponse();
 
-    resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-    MvcResult mvcResult = resultActions.andReturn();
-    MockHttpServletResponse response = mvcResult.getResponse();
     String authentication = response.getHeader("Authentication");
 
     assertThat(authentication).isNotEmpty();
+  }
+
+  @Test
+  @DisplayName("POST /member/login로 유효하지 않은 값은 Bad Request(400)")
+  void t3() throws Exception {
+    mvc.perform(
+        post("/member/login")
+            .content("""
+                {
+                  "username" : "",
+                  "password" : "1234"
+                }
+                """.stripIndent())
+            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+        .andDo(print())
+        .andExpect(status().is4xxClientError());
+
+    mvc.perform(
+        post("/member/login")
+            .content("""
+                {
+                  "username" : "user1",
+                  "password" : ""
+                }
+                """.stripIndent())
+            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+        .andDo(print())
+        .andExpect(status().is4xxClientError());
   }
 }
