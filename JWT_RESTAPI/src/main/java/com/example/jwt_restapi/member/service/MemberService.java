@@ -2,6 +2,7 @@ package com.example.jwt_restapi.member.service;
 
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.repository.MemberRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,9 @@ public class MemberService {
 
     memberRepository.save(member);
     return member;
+  }
+
+  public Optional<Member> findByUsername(String username) {
+    return memberRepository.findByUsername(username);
   }
 }
