@@ -89,4 +89,30 @@ class JwtRestapiApplicationTests {
         .andDo(print())
         .andExpect(status().is4xxClientError());
   }
+
+  @Test
+  @DisplayName("POST /member/login username & password가 올바르지 않을 경우 Bad Request(400)")
+  void t4() throws Exception {
+    mvc.perform(post("/member/login")
+            .content("""
+                {
+                  "username" : "user3",
+                  "password" : "1234"
+                }
+                """.stripIndent())
+            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+        .andDo(print())
+        .andExpect(status().is4xxClientError());
+
+    mvc.perform(post("/member/login")
+            .content("""
+                {
+                  "username" : "user1",
+                  "password" : "12345"
+                }
+                """.stripIndent())
+            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+        .andDo(print())
+        .andExpect(status().is4xxClientError());
+  }
 }
