@@ -1,9 +1,11 @@
 package com.example.jwt_restapi.member.controller;
 
+import com.example.jwt_restapi.util.Util;
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.service.MemberService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,11 +39,9 @@ public class MemberController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    String body = "username : %s, password : %s".formatted(loginDto.getUsername(),
-        loginDto.getPassword());
-    return ResponseEntity.ok()
-        .header("Authentication", "JWT")
-        .body(body);
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("AccessToken", "AccessToken");
+    return Util.Spring.responseEntityOf(headers);
   }
 
   @Data
