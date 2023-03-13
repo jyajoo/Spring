@@ -1,12 +1,10 @@
 package com.example.jwt_restapi.member.controller;
 
-import com.example.jwt_restapi.util.Util;
+import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.service.MemberService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,25 +21,23 @@ public class MemberController {
   private final PasswordEncoder passwordEncoder;
 
   @PostMapping("/login")
-  public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+  public <T> ResponseEntity<RsData<T>> login(@RequestBody LoginDto loginDto) {
 
     if (loginDto.isNotValid()) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      return ResponseEntity.badRequest()
+          .body(RsData.of("F-1", "아이디 또는 비밀번호를 입력해주세요."));
     }
 
     Member member = memberService.findByUsername(loginDto.getUsername()).orElse(null);
 
-    if (member == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    if (member == null || !passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
+      return ResponseEntity.badRequest()
+          .body(RsData.of("F-2", "아이디 또는 비밀번호가 옳지 않습니다."));
     }
 
-    if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("AccessToken", "AccessToken");
-    return Util.Spring.responseEntityOf(headers);
+    return ResponseEntity.ok()
+        .header("AccessToken", "AccessToken")
+        .body(RsData.of("S-1", "로그인 성공"));
   }
 
   @Data
