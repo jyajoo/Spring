@@ -1,9 +1,9 @@
 package com.example.jwt_restapi.member.controller;
 
 import com.example.jwt_restapi.base.dto.RsData;
+import com.example.jwt_restapi.member.dto.LoginRequest;
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.service.MemberService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,34 +21,24 @@ public class MemberController {
   private final PasswordEncoder passwordEncoder;
 
   @PostMapping("/login")
-  public <T> ResponseEntity<RsData<T>> login(@RequestBody LoginDto loginDto) {
+  public ResponseEntity<RsData<String>> login(@RequestBody LoginRequest loginRequest) {
 
-    if (loginDto.isNotValid()) {
+    if (loginRequest.isNotValid()) {
       return ResponseEntity.badRequest()
-          .body(RsData.of("F-1", "아이디 또는 비밀번호를 입력해주세요."));
+          .body(RsData.of("F-1", "아이디 또는 비밀번호를 입력해주세요.", null));
     }
 
-    Member member = memberService.findByUsername(loginDto.getUsername()).orElse(null);
+    Member member = memberService.findByUsername(loginRequest.getUsername()).orElse(null);
 
-    if (member == null || !passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
+    if (member == null || !passwordEncoder.matches(loginRequest.getPassword(),
+        member.getPassword())) {
       return ResponseEntity.badRequest()
-          .body(RsData.of("F-2", "아이디 또는 비밀번호가 옳지 않습니다."));
+          .body(RsData.of("F-2", "아이디 또는 비밀번호가 옳지 않습니다.", null));
     }
 
+    String accessToken = "Access-Token";
     return ResponseEntity.ok()
         .header("AccessToken", "AccessToken")
-        .body(RsData.of("S-1", "로그인 성공"));
+        .body(RsData.of("S-1", "로그인 성공", accessToken));
   }
-
-  @Data
-  public static class LoginDto {
-    String username;
-    String password;
-
-    public boolean isNotValid() {
-      return username == null || password == null || username.trim().length() == 0
-          || password.trim().length() == 0;
-    }
-  }
-
 }
