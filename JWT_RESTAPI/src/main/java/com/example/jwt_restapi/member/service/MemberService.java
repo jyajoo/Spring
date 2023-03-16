@@ -1,8 +1,11 @@
 package com.example.jwt_restapi.member.service;
 
 import com.example.jwt_restapi.member.entity.Member;
+import com.example.jwt_restapi.member.entity.MemberRole;
 import com.example.jwt_restapi.member.repository.MemberRepository;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,9 @@ public class MemberService {
         .email(email)
         .build();
 
+    Set<MemberRole> roles = new HashSet<>();
+    roles.add(MemberRole.ROLE_MEMBER);
+    member.setRoleList(roles);
     memberRepository.save(member);
     return member;
   }
