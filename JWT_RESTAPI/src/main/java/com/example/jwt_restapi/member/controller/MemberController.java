@@ -4,6 +4,7 @@ import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.member.dto.LoginRequest;
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.service.MemberService;
+import com.example.jwt_restapi.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,7 @@ public class MemberController {
 
   private final MemberService memberService;
   private final PasswordEncoder passwordEncoder;
+  private final JwtProvider jwtProvider;
 
   @PostMapping("/login")
   public ResponseEntity<RsData<String>> login(@RequestBody LoginRequest loginRequest) {
@@ -36,9 +38,10 @@ public class MemberController {
           .body(RsData.of("F-2", "아이디 또는 비밀번호가 옳지 않습니다.", null));
     }
 
-    String accessToken = "Access-Token";
+    String accessToken = jwtProvider.generateAccessKey(member);
+
     return ResponseEntity.ok()
-        .header("AccessToken", "AccessToken")
+        .header("AccessToken", accessToken)
         .body(RsData.of("S-1", "로그인 성공", accessToken));
   }
 }

@@ -57,9 +57,9 @@ class JwtRestapiApplicationTests {
         .andExpect(status().is2xxSuccessful())
         .andReturn().getResponse();
 
-    String authentication = response.getHeader("Authentication");
+    String accessToken = response.getHeader("AccessToken");
 
-    assertThat(authentication).isNotEmpty();
+    assertThat(accessToken).isNotEmpty();
   }
 
   @Test
