@@ -24,7 +24,7 @@ public class MemberService {
 
     Set<MemberRole> roles = new HashSet<>();
     roles.add(MemberRole.ROLE_MEMBER);
-    member.setRoleList(roles);
+    member.setRoleSet(roles);
     memberRepository.save(member);
     return member;
   }
