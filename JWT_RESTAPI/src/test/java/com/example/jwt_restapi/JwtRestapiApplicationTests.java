@@ -115,4 +115,30 @@ class JwtRestapiApplicationTests {
         .andDo(print())
         .andExpect(status().is4xxClientError());
   }
+
+  @Test
+  @DisplayName("AccessToken을 통해 Member 찾기")
+  void t5() throws Exception {
+    MockHttpServletResponse response = mvc.perform(post("/member/login")
+            .content("""
+                {
+                  "username" : "user1",
+                  "password" : "1234"
+                }
+                """.stripIndent())
+            .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+        .andDo(print())
+        .andExpect(status().is2xxSuccessful())
+        .andReturn().getResponse();
+
+    String accessToken = response.getHeader("AccessToken");
+
+    MockHttpServletResponse response2 = mvc.perform(get("/member/me")
+            .header("Authorization", "Bearer" + accessToken))
+        .andDo(print())
+        .andExpect(status().is2xxSuccessful())
+        .andReturn().getResponse();
+    
+    // json 비교 코드 추가 하기
+  }
 }
