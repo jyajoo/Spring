@@ -25,20 +25,19 @@ public class MemberContext extends User {
   private final String email;
   private final LocalDateTime createdDate;
   private final LocalDateTime updatedDate;
-  private final Set<MemberRole> roleList;
+  private final Set<MemberRole> roleSet;
 
   public MemberContext(Member member) {
-    super(member.getUsername(), member.getPassword(), authorities(member.getRoleList()));
+    super(member.getUsername(), member.getPassword(), getAuthorities(member.getRoleSet()));
     id = member.getId();
     username = member.getUsername();
     email = member.getEmail();
     createdDate = member.getCreatedDate();
     updatedDate = member.getUpdatedDate();
-    roleList = member.getRoleList();
+    roleSet = member.getRoleSet();
   }
-
-  private static Collection<? extends GrantedAuthority> authorities(Set<MemberRole> roleList) {
-    return roleList.stream().map(role -> new SimpleGrantedAuthority(role.name()))
-        .collect(Collectors.toList());
+  private static Collection<? extends GrantedAuthority> getAuthorities(Set<MemberRole> roleSet) {
+    return roleSet.stream().map(role -> new SimpleGrantedAuthority(role.name()))
+        .collect(Collectors.toSet());
   }
 }

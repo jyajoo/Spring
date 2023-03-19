@@ -42,5 +42,5 @@ public class Member extends BaseEntity {
   @CollectionTable(name = "member_roles",
       joinColumns = @JoinColumn(name = "member_id"))
   @Enumerated(EnumType.STRING)
-  private Set<MemberRole> roleList;
+  private Set<MemberRole> roleSet;
 }

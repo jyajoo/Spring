@@ -24,7 +24,7 @@ public class JwtProvider {
   public String generateAccessKey(Member member) {
 
     Claims claims = Jwts.claims().setSubject(String.valueOf(member.getId()));
-    claims.put("member_roles", member.getRoleList());
+    claims.put("member_roles", member.getRoleSet());
 
     Date now = new Date();
 
