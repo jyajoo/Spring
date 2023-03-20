@@ -134,7 +134,7 @@ class JwtRestapiApplicationTests {
     String accessToken = response.getHeader("AccessToken");
 
     MockHttpServletResponse response2 = mvc.perform(get("/member/me")
-            .header("Authorization", "Bearer" + accessToken))
+            .header("Authorization", "Bearer " + accessToken))
         .andDo(print())
         .andExpect(status().is2xxSuccessful())
         .andReturn().getResponse();

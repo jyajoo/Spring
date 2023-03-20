@@ -2,12 +2,15 @@ package com.example.jwt_restapi.member.controller;
 
 import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.member.dto.LoginRequest;
+import com.example.jwt_restapi.member.dto.MemberContext;
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.service.MemberService;
 import com.example.jwt_restapi.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +46,12 @@ public class MemberController {
     return ResponseEntity.ok()
         .header("AccessToken", accessToken)
         .body(RsData.of("S-1", "로그인 성공", accessToken));
+  }
+
+  @GetMapping("/me")
+  public ResponseEntity<RsData<MemberContext>> findMember(
+      @AuthenticationPrincipal MemberContext memberContext) {
+    return ResponseEntity.ok()
+        .body(RsData.of("S-2", "현재 로그인한 회원 정보", memberContext));
   }
 }
