@@ -1,6 +1,8 @@
 package com.example.jwt_restapi.security;
 
+import com.example.jwt_restapi.member.repository.MemberRepository;
 import com.example.jwt_restapi.security.jwt.JWTAuthorizationFilter;
+import com.example.jwt_restapi.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
+  private final JwtProvider jwtProvider;
+  private final MemberRepository memberRepository;
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http,
       AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -32,7 +36,8 @@ public class SecurityConfig {
 
         .and()
         .addFilterBefore(
-            new JWTAuthorizationFilter(authenticationConfiguration.getAuthenticationManager()),
+            new JWTAuthorizationFilter(authenticationConfiguration.getAuthenticationManager(),
+                jwtProvider, memberRepository),
             UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
