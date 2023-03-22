@@ -42,7 +42,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
       if (jwtProvider.verifyToken(token)) {
         Claims claims = jwtProvider.getClaims(token);
         String memberId = claims.getSubject();
-        Member member = memberRepository.findById(Long.valueOf(memberId))
+        Member member = memberRepository.findMemberById(Long.valueOf(memberId))
             .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 계정입니다."));
         Authentication authentication = jwtProvider.getAuthentication(member);
         SecurityContextHolder.getContext().setAuthentication(authentication);
