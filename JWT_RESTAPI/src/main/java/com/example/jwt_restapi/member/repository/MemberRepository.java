@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-  Optional<Member> findByUsername(String username);
+  @Query("select m from Member m join fetch m.roleSet where m.username = :username")
+  Optional<Member> findMemberByUsername(@Param("username") String username);
 
   @Query("select m from Member m join fetch m.roleSet where m.id = :memberId")
   Optional<Member> findMemberById(@Param("memberId") Long id);

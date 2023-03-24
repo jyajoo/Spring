@@ -33,7 +33,7 @@ public class MemberController {
           .body(RsData.of("F-1", "아이디 또는 비밀번호를 입력해주세요.", null));
     }
 
-    Member member = memberService.findByUsername(loginRequest.getUsername()).orElse(null);
+    Member member = memberService.findMemberByUsername(loginRequest.getUsername()).orElse(null);
 
     if (member == null || !passwordEncoder.matches(loginRequest.getPassword(),
         member.getPassword())) {

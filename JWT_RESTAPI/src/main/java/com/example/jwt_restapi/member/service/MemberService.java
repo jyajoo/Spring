@@ -29,7 +29,7 @@ public class MemberService {
     return member;
   }
 
-  public Optional<Member> findByUsername(String username) {
-    return memberRepository.findByUsername(username);
+  public Optional<Member> findMemberByUsername(String username) {
+    return memberRepository.findMemberByUsername(username);
   }
 }
