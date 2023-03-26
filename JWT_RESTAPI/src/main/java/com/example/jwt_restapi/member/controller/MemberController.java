@@ -1,5 +1,6 @@
 package com.example.jwt_restapi.member.controller;
 
+import com.example.jwt_restapi.base.dto.ResultCode;
 import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.member.dto.LoginRequest;
 import com.example.jwt_restapi.member.dto.MemberContext;
@@ -30,7 +31,7 @@ public class MemberController {
 
     if (loginRequest.isNotValid()) {
       return ResponseEntity.badRequest()
-          .body(RsData.of("F-1", "아이디 또는 비밀번호를 입력해주세요.", null));
+          .body(RsData.of(ResultCode.FAIL, "아이디 또는 비밀번호를 입력해주세요.", null));
     }
 
     Member member = memberService.findMemberByUsername(loginRequest.getUsername()).orElse(null);
@@ -38,20 +39,20 @@ public class MemberController {
     if (member == null || !passwordEncoder.matches(loginRequest.getPassword(),
         member.getPassword())) {
       return ResponseEntity.badRequest()
-          .body(RsData.of("F-2", "아이디 또는 비밀번호가 옳지 않습니다.", null));
+          .body(RsData.of(ResultCode.FAIL, "아이디 또는 비밀번호가 옳지 않습니다.", null));
     }
 
     String accessToken = jwtProvider.generateAccessKey(member);
 
     return ResponseEntity.ok()
         .header("AccessToken", accessToken)
-        .body(RsData.of("S-1", "로그인 성공", accessToken));
+        .body(RsData.of(ResultCode.SUCCESS, "로그인 성공", accessToken));
   }
 
   @GetMapping("/me")
   public ResponseEntity<RsData<MemberContext>> findMember(
       @AuthenticationPrincipal MemberContext memberContext) {
     return ResponseEntity.ok()
-        .body(RsData.of("S-2", "현재 로그인한 회원 정보", memberContext));
+        .body(RsData.of(ResultCode.SUCCESS, "현재 로그인한 회원 정보", memberContext));
   }
 }
