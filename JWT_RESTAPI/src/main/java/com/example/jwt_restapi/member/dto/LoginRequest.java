@@ -1,11 +1,11 @@
 package com.example.jwt_restapi.member.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class LoginRequest {
-  String username;
-  String password;
+  private String username;
+  private String password;
 
   public boolean isNotValid() {
     return username == null || password == null || username.trim().length() == 0
