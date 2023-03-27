@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
-  @ExceptionHandler({MemberException.class})
+  @ExceptionHandler({MemberException.class, BoardException.class})
   public ResponseEntity<RsData<Object>> exceptionHandling(Exception e) {
 
     return ResponseEntity.badRequest()

@@ -1,5 +1,6 @@
 package com.example.jwt_restapi.board.service;
 
+import com.example.jwt_restapi.base.exception.BoardException;
 import com.example.jwt_restapi.board.dto.BoardDto;
 import com.example.jwt_restapi.board.entity.Board;
 import com.example.jwt_restapi.board.repository.BoardRepository;
@@ -29,5 +30,12 @@ public class BoardService {
   public List<BoardDto> getBoardList() {
     return boardRepository.findAll().stream().map(BoardDto::from)
         .collect(Collectors.toList());
+  }
+
+  public BoardDto getBoard(Long id) {
+    Board board = boardRepository.findById(id)
+        .orElseThrow(() -> new BoardException("해당 게시물이 존재하지 않습니다."));
+
+    return BoardDto.from(board);
   }
 }

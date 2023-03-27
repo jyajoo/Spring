@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,6 +22,13 @@ public class BoardController {
     List<BoardDto> boardList = boardService.getBoardList();
 
     return ResponseEntity.ok()
-        .body(RsData.of(ResultCode.SUCCESS, null, boardList));
+        .body(RsData.of(ResultCode.SUCCESS, "게시물 전체 조회", boardList));
+  }
+
+  @GetMapping("/board/{id}")
+  public ResponseEntity<RsData<BoardDto>> getBoard(@PathVariable Long id) {
+    BoardDto board = boardService.getBoard(id);
+    return ResponseEntity.ok()
+        .body(RsData.of(ResultCode.SUCCESS, "게시물 단건 조회", board));
   }
 }
