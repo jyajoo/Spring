@@ -2,6 +2,7 @@ package com.example.jwt_restapi.member.dto;
 
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.entity.MemberRole;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
@@ -18,6 +19,7 @@ hashCode : 두 객체가 같은 객체인지, 동일성(identity) 비교
  */
 @Getter
 @EqualsAndHashCode(callSuper=false) // callSuper=false : 부모 클래스 고려 X
+@JsonIncludeProperties({"id", "username", "email", "createdDate", "updatedDate", "roleSet"})
 public class MemberContext extends User {
 
   private final Long id;

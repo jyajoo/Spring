@@ -4,7 +4,6 @@ import com.example.jwt_restapi.base.dto.ResultCode;
 import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.member.dto.LoginRequest;
 import com.example.jwt_restapi.member.dto.MemberContext;
-import com.example.jwt_restapi.member.dto.MemberDto;
 import com.example.jwt_restapi.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,18 +32,10 @@ public class MemberController {
   }
 
   @GetMapping("/me")
-  public ResponseEntity<RsData<MemberDto>> findMember(
+  public ResponseEntity<RsData<MemberContext>> findMember(
       @AuthenticationPrincipal MemberContext memberContext) {
 
-    MemberDto memberDto = MemberDto.builder()
-        .id(memberContext.getId())
-        .username(memberContext.getUsername())
-        .email(memberContext.getEmail())
-        .roleSet(memberContext.getRoleSet())
-        .createdDate(memberContext.getCreatedDate())
-        .updatedDate(memberContext.getUpdatedDate())
-        .build();
     return ResponseEntity.ok()
-        .body(RsData.of(ResultCode.SUCCESS, "현재 로그인한 회원 정보", memberDto));
+        .body(RsData.of(ResultCode.SUCCESS, "현재 로그인한 회원 정보", memberContext));
   }
 }
