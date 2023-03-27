@@ -1,5 +1,7 @@
 package com.example.jwt_restapi.base;
 
+import com.example.jwt_restapi.board.entity.Board;
+import com.example.jwt_restapi.board.service.BoardService;
 import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.service.MemberService;
 import org.springframework.boot.CommandLineRunner;
@@ -13,11 +15,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class TestInitData {
 
   @Bean
-  CommandLineRunner initTestData(MemberService memberService, PasswordEncoder passwordEncoder) {
+  CommandLineRunner initTestData(MemberService memberService, PasswordEncoder passwordEncoder, BoardService boardService) {
     String password = passwordEncoder.encode("1234");
     return args -> {
       Member user1 = memberService.join("user1", password, "user1@test.com");
       Member user2 = memberService.join("user2", password, "user2@test.com");
+
+      Board board1 = boardService.create(user1, "subject1", "content1");
+      Board board2 = boardService.create(user1, "subject2", "content2");
+      Board board3 = boardService.create(user2, "subject3", "content3");
+      Board board4 = boardService.create(user2, "subject4", "content4");
     };
 
 
