@@ -133,12 +133,18 @@ class JwtRestapiApplicationTests {
 
     String accessToken = response.getHeader("AccessToken");
 
-    MockHttpServletResponse response2 = mvc.perform(get("/member/me")
+    mvc.perform(get("/member/me")
             .header("Authorization", "Bearer " + accessToken))
         .andDo(print())
         .andExpect(status().is2xxSuccessful())
-        .andReturn().getResponse();
-    
+        .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+        .andExpect(jsonPath("$.msg").value("현재 로그인한 회원 정보"))
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.username").value("user1"))
+        .andExpect(jsonPath("$.data.email").value("user1@test.com"))
+        .andExpect(jsonPath("$.data.createdDate").isNotEmpty())
+        .andExpect(jsonPath("$.data.updatedDate").isNotEmpty())
+        .andExpect(jsonPath("$.data.roleSet").isNotEmpty());
     // json 비교 코드 추가 하기
   }
 }
