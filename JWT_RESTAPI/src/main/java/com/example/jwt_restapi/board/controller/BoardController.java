@@ -4,9 +4,12 @@ import com.example.jwt_restapi.base.dto.ResultCode;
 import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.board.dto.BoardDto;
 import com.example.jwt_restapi.board.service.BoardService;
+import com.example.jwt_restapi.member.dto.MemberContext;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +33,13 @@ public class BoardController {
     BoardDto board = boardService.getBoard(id);
     return ResponseEntity.ok()
         .body(RsData.of(ResultCode.SUCCESS, "게시물 단건 조회", board));
+  }
+
+  @DeleteMapping("/board/{id}")
+  public ResponseEntity<RsData<Object>> deleteBoard(@AuthenticationPrincipal
+  MemberContext memberContext, @PathVariable Long id) {
+    boardService.deleteBoard(memberContext, id);
+    return ResponseEntity.ok()
+        .body(RsData.of(ResultCode.SUCCESS, "게시물 삭제", null));
   }
 }
