@@ -5,6 +5,7 @@ import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.member.dto.LoginRequest;
 import com.example.jwt_restapi.member.dto.MemberContext;
 import com.example.jwt_restapi.member.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +23,7 @@ public class MemberController {
   private final MemberService memberService;
 
   @PostMapping("/login")
-  public ResponseEntity<RsData<String>> login(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<RsData<String>> login(@Valid @RequestBody LoginRequest loginRequest) {
 
     String accessToken = memberService.login(loginRequest);
 

@@ -36,9 +36,6 @@ public class MemberService {
   }
 
   public String login(LoginRequest loginRequest) {
-    if (loginRequest.isNotValid()) {
-      throw new MemberException("아이디 또는 비밀번호를 입력해주세요.");
-    }
 
     Member member = memberRepository.findMemberByUsername(loginRequest.getUsername())
         .orElseThrow(() -> new MemberException("회원이 존재하지 않습니다."));

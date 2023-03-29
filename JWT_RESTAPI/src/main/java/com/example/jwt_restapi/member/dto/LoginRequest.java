@@ -1,14 +1,13 @@
 package com.example.jwt_restapi.member.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
 public class LoginRequest {
+  @NotBlank(message = "아이디를 입력해주세요")
   private String username;
-  private String password;
 
-  public boolean isNotValid() {
-    return username == null || password == null || username.trim().length() == 0
-        || password.trim().length() == 0;
-  }
+  @NotBlank(message = "비밀번호를 입력해주세요")
+  private String password;
 }
