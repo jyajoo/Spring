@@ -3,15 +3,19 @@ package com.example.jwt_restapi.board.controller;
 import com.example.jwt_restapi.base.dto.ResultCode;
 import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.board.dto.BoardDto;
+import com.example.jwt_restapi.board.dto.BoardUpdateRequest;
 import com.example.jwt_restapi.board.service.BoardService;
 import com.example.jwt_restapi.member.dto.MemberContext;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,5 +45,15 @@ public class BoardController {
     boardService.deleteBoard(memberContext, id);
     return ResponseEntity.ok()
         .body(RsData.of(ResultCode.SUCCESS, "게시물 삭제", null));
+  }
+
+  @PatchMapping("/board/{id}")
+  public ResponseEntity<RsData<BoardDto>> updateBoard(
+      @AuthenticationPrincipal MemberContext memberContext, @PathVariable Long id,
+      @Valid @RequestBody BoardUpdateRequest boardUpdateRequest) {
+
+    BoardDto boardDto = boardService.updateBoard(memberContext, id, boardUpdateRequest);
+    return ResponseEntity.ok()
+        .body(RsData.of(ResultCode.SUCCESS, "게시물 수정", boardDto));
   }
 }

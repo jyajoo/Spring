@@ -1,6 +1,7 @@
 package com.example.jwt_restapi.board.entity;
 
 import com.example.jwt_restapi.base.entity.BaseEntity;
+import com.example.jwt_restapi.board.dto.BoardUpdateRequest;
 import com.example.jwt_restapi.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
@@ -29,4 +30,9 @@ public class Board extends BaseEntity {
 
   @JsonIgnore
   private String content;
+
+  public void update(BoardUpdateRequest boardUpdateRequest) {
+    this.subject = boardUpdateRequest.getSubject();
+    this.content = boardUpdateRequest.getContent();
+  }
 }
