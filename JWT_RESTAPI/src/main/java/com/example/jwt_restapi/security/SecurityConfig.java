@@ -25,6 +25,7 @@ public class SecurityConfig {
       AuthenticationConfiguration authenticationConfiguration) throws Exception {
     http
         .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+            .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
             .requestMatchers("/member/join", "/member/login").permitAll()
             .anyRequest().authenticated())
         .cors().disable()       // 타 도메인에서 API 접근 허용
