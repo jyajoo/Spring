@@ -34,6 +34,8 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.0.4'
+
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.4'
 }
 
 tasks.named('test') {
