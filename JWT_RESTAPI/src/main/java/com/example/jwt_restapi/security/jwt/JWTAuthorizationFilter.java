@@ -1,7 +1,7 @@
 package com.example.jwt_restapi.security.jwt;
 
 import com.example.jwt_restapi.member.entity.Member;
-import com.example.jwt_restapi.member.repository.MemberRepository;
+import com.example.jwt_restapi.member.service.MemberService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,14 +19,14 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
   private final JwtProvider jwtProvider;
-  private final MemberRepository memberRepository;
+  private final MemberService memberService;
 
   public JWTAuthorizationFilter(AuthenticationManager authenticationManager,
-      JwtProvider jwtProvider, MemberRepository memberRepository) {
+      JwtProvider jwtProvider, MemberService memberService) {
 
     super(authenticationManager);
     this.jwtProvider = jwtProvider;
-    this.memberRepository = memberRepository;
+    this.memberService = memberService;
   }
 
   @Override
@@ -42,7 +42,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
       if (jwtProvider.verifyToken(token)) {
         Claims claims = jwtProvider.getClaims(token);
         String memberId = claims.getSubject();
-        Member member = memberRepository.findMemberById(Long.valueOf(memberId))
+        Member member = memberService.findMemberById(Long.valueOf(memberId))
             .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 계정입니다."));
         Authentication authentication = jwtProvider.getAuthentication(member);
         SecurityContextHolder.getContext().setAuthentication(authentication);

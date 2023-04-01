@@ -7,6 +7,7 @@ import com.example.jwt_restapi.member.entity.MemberRole;
 import com.example.jwt_restapi.member.repository.MemberRepository;
 import com.example.jwt_restapi.security.jwt.JwtProvider;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,5 +46,9 @@ public class MemberService {
       throw new MemberException("아이디 또는 비밀번호가 옳지 않습니다.");
     }
     return jwtProvider.generateAccessKey(member);
+  }
+
+  public Optional<Member> findMemberById(Long id) {
+    return memberRepository.findMemberById(id);
   }
 }
