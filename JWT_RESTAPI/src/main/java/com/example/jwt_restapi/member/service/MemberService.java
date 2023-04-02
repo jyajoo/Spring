@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +64,16 @@ public class MemberService {
 
   public boolean verifyWithMemberToken(Member member, String token) {
     return member.getAccessToken().equals(token);
+  }
+
+  public int getInt() {
+    System.out.println("getInt 실행됨");
+    return 5;
+  }
+
+  @Cacheable("cachedInt")
+  public int getCachedInt() {
+    System.out.println("getCachedInt 실행됨");
+    return 5;
   }
 }
