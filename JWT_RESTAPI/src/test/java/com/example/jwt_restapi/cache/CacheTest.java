@@ -52,4 +52,22 @@ class CacheTest {
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
   }
+
+  @Test
+  @DisplayName("캐시 삭제_CacheEvict")
+  void t3() {
+    int cachedInt = memberService.getCachedInt();
+    assertThat(cachedInt).isEqualTo(5);
+    System.out.println(cachedInt);
+
+    cachedInt = memberService.getCachedInt();
+    assertThat(cachedInt).isEqualTo(5);
+    System.out.println(cachedInt);
+
+    memberService.deleteCache();
+
+    cachedInt = memberService.getCachedInt();
+    assertThat(cachedInt).isEqualTo(5);
+    System.out.println(cachedInt);
+  }
 }

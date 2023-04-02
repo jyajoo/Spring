@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -75,5 +76,10 @@ public class MemberService {
   public int getCachedInt() {
     System.out.println("getCachedInt 실행됨");
     return 5;
+  }
+
+  @CacheEvict("cachedInt")
+  public void deleteCache() {
+
   }
 }
