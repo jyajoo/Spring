@@ -31,4 +31,10 @@ public class CacheTestService {
     log.info("cachePut 실행됨");
     return 10;
   }
+
+  @Cacheable("parameter")
+  public int parameter(int a) {
+    log.info("parameter 실행됨");
+    return a;
+  }
 }

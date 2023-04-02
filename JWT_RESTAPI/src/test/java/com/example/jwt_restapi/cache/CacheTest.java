@@ -41,7 +41,7 @@ class CacheTest {
    * 5
    */
   @Test
-  @DisplayName("캐시 사용 후")
+  @DisplayName("캐시 사용 후_Cacheable")
   void t2() {
     int cachedInt = cacheTestService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
@@ -98,6 +98,30 @@ class CacheTest {
     System.out.println(cachedInt);
 
     cachedInt = cacheTestService.cachePut();
+    assertThat(cachedInt).isEqualTo(10);
+    System.out.println(cachedInt);
+  }
+
+  /**
+   * parameter로 들어온 값이 key 값으로 설정됨
+   * parameter 실행됨
+   * 10
+   * parameter 실행됨
+   * 5
+   * 10
+   */
+  @Test
+  @DisplayName("parameter_Cacheable")
+  void t5() {
+    int cachedInt = cacheTestService.parameter(10);
+    assertThat(cachedInt).isEqualTo(10);
+    System.out.println(cachedInt);
+
+    cachedInt = cacheTestService.parameter(5);
+    assertThat(cachedInt).isEqualTo(5);
+    System.out.println(cachedInt);
+
+    cachedInt = cacheTestService.parameter(10);
     assertThat(cachedInt).isEqualTo(10);
     System.out.println(cachedInt);
   }
