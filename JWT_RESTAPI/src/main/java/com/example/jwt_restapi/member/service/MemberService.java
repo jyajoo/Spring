@@ -12,6 +12,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor // final, @NotNull 붙은 필드의 생성자 자동 생성
@@ -36,6 +37,11 @@ public class MemberService {
     return member;
   }
 
+  /**
+   * 로그인 기능
+   * 회원에 accessToken이 없는 경우, 토큰 발행
+   */
+  @Transactional
   public String login(LoginRequest loginRequest) {
 
     Member member = memberRepository.findMemberByUsername(loginRequest.getUsername())
@@ -45,10 +51,17 @@ public class MemberService {
         member.getPassword())) {
       throw new MemberException("아이디 또는 비밀번호가 옳지 않습니다.");
     }
-    return jwtProvider.generateAccessKey(member);
+
+    String accessToken = jwtProvider.generateAccessKey(member);
+    member.setAccessToken(accessToken);
+    return accessToken;
   }
 
   public Optional<Member> findMemberById(Long id) {
     return memberRepository.findMemberById(id);
+  }
+
+  public boolean verifyWithMemberToken(Member member, String token) {
+    return member.getAccessToken().equals(token);
   }
 }
