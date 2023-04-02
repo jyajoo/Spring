@@ -2,7 +2,6 @@ package com.example.jwt_restapi.cache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.jwt_restapi.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 class CacheTest {
 
   @Autowired
-  private MemberService memberService;
+  private CacheTestService cacheTestService;
 
   /**
    * getInt 실행됨
@@ -27,11 +26,11 @@ class CacheTest {
   @Test
   @DisplayName("캐시 사용 전")
   void t1() {
-    int cachedInt = memberService.getInt();
+    int cachedInt = cacheTestService.getInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
 
-    cachedInt = memberService.getInt();
+    cachedInt = cacheTestService.getInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
   }
@@ -44,11 +43,11 @@ class CacheTest {
   @Test
   @DisplayName("캐시 사용 후")
   void t2() {
-    int cachedInt = memberService.getCachedInt();
+    int cachedInt = cacheTestService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
 
-    cachedInt = memberService.getCachedInt();
+    cachedInt = cacheTestService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
   }
@@ -64,17 +63,17 @@ class CacheTest {
   @Test
   @DisplayName("캐시 삭제_CacheEvict")
   void t3() {
-    int cachedInt = memberService.getCachedInt();
+    int cachedInt = cacheTestService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
 
-    cachedInt = memberService.getCachedInt();
+    cachedInt = cacheTestService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
 
-    memberService.deleteCache();
+    cacheTestService.deleteCache();
 
-    cachedInt = memberService.getCachedInt();
+    cachedInt = cacheTestService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
   }
@@ -90,15 +89,15 @@ class CacheTest {
   @Test
   @DisplayName("캐시 업데이트_CachePut")
   void t4() {
-    int cachedInt = memberService.getCachedInt();
+    int cachedInt = cacheTestService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
     System.out.println(cachedInt);
 
-    cachedInt = memberService.cachePut();
+    cachedInt = cacheTestService.cachePut();
     assertThat(cachedInt).isEqualTo(10);
     System.out.println(cachedInt);
 
-    cachedInt = memberService.cachePut();
+    cachedInt = cacheTestService.cachePut();
     assertThat(cachedInt).isEqualTo(10);
     System.out.println(cachedInt);
   }
