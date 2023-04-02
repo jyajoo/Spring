@@ -10,7 +10,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor // final, @NotNull 붙은 필드의 생성자 자동 생성
+@Slf4j
 public class MemberService {
 
   private final MemberRepository memberRepository;
@@ -68,18 +71,24 @@ public class MemberService {
   }
 
   public int getInt() {
-    System.out.println("getInt 실행됨");
+    log.info("getInt 실행됨");
     return 5;
   }
 
   @Cacheable("cachedInt")
   public int getCachedInt() {
-    System.out.println("getCachedInt 실행됨");
+    log.info("getCachedInt 실행됨");
     return 5;
   }
 
   @CacheEvict("cachedInt")
   public void deleteCache() {
+    log.info("deleteCache 실행됨");
+  }
 
+  @CachePut("cachedInt")
+  public int cachePut() {
+    log.info("cachePut 실행됨");
+    return 10;
   }
 }

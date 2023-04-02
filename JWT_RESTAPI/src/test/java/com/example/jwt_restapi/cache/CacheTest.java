@@ -53,6 +53,14 @@ class CacheTest {
     System.out.println(cachedInt);
   }
 
+  /**
+   * getCachedInt 실행됨
+   * 5
+   * 5
+   * deleteCache 실행됨
+   * getCachedInt 실행됨
+   * 5
+   */
   @Test
   @DisplayName("캐시 삭제_CacheEvict")
   void t3() {
@@ -68,6 +76,30 @@ class CacheTest {
 
     cachedInt = memberService.getCachedInt();
     assertThat(cachedInt).isEqualTo(5);
+    System.out.println(cachedInt);
+  }
+
+  /**
+   * getCachedInt 실행됨
+   * 5
+   * cachePut 실행됨
+   * 10
+   * cachePut 실행됨
+   * 10
+   */
+  @Test
+  @DisplayName("캐시 업데이트_CachePut")
+  void t4() {
+    int cachedInt = memberService.getCachedInt();
+    assertThat(cachedInt).isEqualTo(5);
+    System.out.println(cachedInt);
+
+    cachedInt = memberService.cachePut();
+    assertThat(cachedInt).isEqualTo(10);
+    System.out.println(cachedInt);
+
+    cachedInt = memberService.cachePut();
+    assertThat(cachedInt).isEqualTo(10);
     System.out.println(cachedInt);
   }
 }
