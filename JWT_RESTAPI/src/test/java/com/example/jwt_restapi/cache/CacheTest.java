@@ -2,6 +2,7 @@ package com.example.jwt_restapi.cache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.jwt_restapi.cache.dto.Cache;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,5 +125,15 @@ class CacheTest {
     cachedInt = cacheTestService.parameter(10);
     assertThat(cachedInt).isEqualTo(10);
     System.out.println(cachedInt);
+  }
+
+  @Test
+  @DisplayName("key 설정_Cacheable")
+  void t6() {
+    Cache cache1 = new Cache(1L, "cache1");
+    Cache cache2 = new Cache(1L, "cache2");
+    String cacheName = cacheTestService.getCacheName(cache1);
+    String cacheName2 = cacheTestService.getCacheName(cache2);
+    assertThat(cacheName).isEqualTo(cacheName2);
   }
 }

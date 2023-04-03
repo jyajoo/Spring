@@ -1,5 +1,6 @@
 package com.example.jwt_restapi.cache;
 
+import com.example.jwt_restapi.cache.dto.Cache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -36,5 +37,11 @@ public class CacheTestService {
   public int parameter(int a) {
     log.info("parameter 실행됨");
     return a;
+  }
+
+  @Cacheable(value = "getCacheName", key = "#cache.id")
+  public String getCacheName(Cache cache) {
+    log.info("getCacheName 실행됨");
+    return cache.getName();
   }
 }
