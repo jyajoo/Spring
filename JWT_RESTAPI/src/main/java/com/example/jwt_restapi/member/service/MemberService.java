@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,7 @@ public class MemberService {
     return accessToken;
   }
 
+  @Cacheable(value = "member")
   public Optional<Member> findMemberById(Long id) {
     return memberRepository.findMemberById(id);
   }
