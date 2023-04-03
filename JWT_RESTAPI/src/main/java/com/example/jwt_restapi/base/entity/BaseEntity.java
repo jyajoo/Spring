@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor // 기본 생성자 생성(접근 제한을 protected로 설정 : 누락 방지)
 @EntityListeners(AuditingEntityListener.class) // 생성일 / 수정일 /생성자 자동화
 @ToString // 문자열 리턴
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
