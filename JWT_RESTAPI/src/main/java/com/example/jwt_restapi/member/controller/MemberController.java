@@ -5,6 +5,7 @@ import com.example.jwt_restapi.base.dto.RsData;
 import com.example.jwt_restapi.member.dto.LoginRequest;
 import com.example.jwt_restapi.member.dto.MemberContext;
 import com.example.jwt_restapi.member.service.MemberService;
+import com.example.jwt_restapi.security.jwt.dto.JwtDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,13 +28,14 @@ public class MemberController {
 
   @PostMapping("/login")
   @Operation(summary = "회원 로그인 기능", description = "회원 로그인 시 토큰을 부여합니다.")
-  public ResponseEntity<RsData<String>> login(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<RsData<JwtDto>> login(@Valid @RequestBody LoginRequest loginRequest) {
 
-    String accessToken = memberService.login(loginRequest);
+    JwtDto jwtDto = memberService.login(loginRequest);
 
     return ResponseEntity.ok()
-        .header("AccessToken", accessToken)
-        .body(RsData.of(ResultCode.SUCCESS, "로그인 성공", accessToken));
+        .header("AccessToken", jwtDto.getAccessToken())
+        .header("RefreshToken", jwtDto.getRefreshToken())
+        .body(RsData.of(ResultCode.SUCCESS, "로그인 성공", jwtDto));
   }
 
   @GetMapping("/me")

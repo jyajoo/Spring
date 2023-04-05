@@ -6,6 +6,7 @@ import com.example.jwt_restapi.member.entity.Member;
 import com.example.jwt_restapi.member.entity.MemberRole;
 import com.example.jwt_restapi.member.repository.MemberRepository;
 import com.example.jwt_restapi.security.jwt.JwtProvider;
+import com.example.jwt_restapi.security.jwt.dto.JwtDto;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -43,7 +44,7 @@ public class MemberService {
    * 회원에 accessToken이 없는 경우, 토큰 발행
    */
   @Transactional
-  public String login(LoginRequest loginRequest) {
+  public JwtDto login(LoginRequest loginRequest) {
 
     Member member = memberRepository.findMemberByUsername(loginRequest.getUsername())
         .orElseThrow(() -> new MemberException("회원이 존재하지 않습니다."));
@@ -57,7 +58,7 @@ public class MemberService {
     String refreshToken = jwtProvider.generateRefreshToken(member);
     member.setAccessToken(accessToken);
     member.setRefreshToken(refreshToken);
-    return accessToken;
+    return JwtDto.from(member);
   }
 
   @Cacheable(value = "member")
