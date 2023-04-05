@@ -53,8 +53,10 @@ public class MemberService {
       throw new MemberException("아이디 또는 비밀번호가 옳지 않습니다.");
     }
 
-    String accessToken = jwtProvider.generateAccessKey(member);
+    String accessToken = jwtProvider.generateAccessToken(member);
+    String refreshToken = jwtProvider.generateRefreshToken(member);
     member.setAccessToken(accessToken);
+    member.setRefreshToken(refreshToken);
     return accessToken;
   }
 

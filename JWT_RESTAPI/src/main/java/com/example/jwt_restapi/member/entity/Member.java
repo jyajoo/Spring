@@ -46,4 +46,7 @@ public class Member extends BaseEntity {
 
   @Column(columnDefinition = "TEXT")
   private String accessToken;
+
+  @Column(columnDefinition = "TEXT")
+  private String refreshToken;
 }

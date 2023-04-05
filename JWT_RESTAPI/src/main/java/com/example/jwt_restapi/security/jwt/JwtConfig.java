@@ -13,9 +13,18 @@ public class JwtConfig {
   @Value("${custom.jwt.secretKey}")
   private String plainSecretKey;
 
-  @Bean
+  @Value("${custom.jwt.secretKey2}")
+  private String plainSecretKey2;
+
+  @Bean(name = "secretKey")
   public SecretKey getSecretKey() {
     String encodedKey = Base64.getEncoder().encodeToString(plainSecretKey.getBytes());
     return Keys.hmacShaKeyFor(encodedKey.getBytes());
+  }
+
+  @Bean(name = "secretKey2")
+  public SecretKey getSecretKey2() {
+    String encodedKey2 = Base64.getEncoder().encodeToString(plainSecretKey2.getBytes());
+    return Keys.hmacShaKeyFor(encodedKey2.getBytes());
   }
 }

@@ -18,13 +18,15 @@ import org.springframework.stereotype.Component;
 public class JwtProvider {
 
   private final SecretKey secretKey;
+
   private static final Long ACCESS_VALID_TIME = 1000L * 60 * 60; // (1시간)
+  private static final Long REFRESH_VALID_TIME = 1000L * 60 * 60 * 24 * 7;
 
   private SecretKey getSecretKey() {
     return secretKey;
   }
 
-  public String generateAccessKey(Member member) {
+  public String generateAccessToken(Member member) {
 
     Claims claims = Jwts.claims().setSubject(String.valueOf(member.getId()));
     claims.put("member_roles", member.getRoleSet());
@@ -34,6 +36,19 @@ public class JwtProvider {
     return Jwts.builder()
         .setClaims(claims)
         .setExpiration(new Date(now.getTime() + ACCESS_VALID_TIME))
+        .signWith(secretKey, SignatureAlgorithm.HS512)
+        .compact();
+  }
+
+  public String generateRefreshToken(Member member) {
+    Claims claims = Jwts.claims().setSubject(String.valueOf(member.getId()));
+    claims.put("member_roles", member.getRoleSet());
+
+    Date now = new Date();
+
+    return Jwts.builder()
+        .setClaims(claims)
+        .setExpiration(new Date(now.getTime() + REFRESH_VALID_TIME))
         .signWith(secretKey, SignatureAlgorithm.HS512)
         .compact();
   }
