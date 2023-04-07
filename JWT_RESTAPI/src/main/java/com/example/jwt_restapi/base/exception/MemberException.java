@@ -1,11 +1,8 @@
 package com.example.jwt_restapi.base.exception;
 
-public class MemberException extends RuntimeException{
+public class MemberException extends CustomException{
 
-  public MemberException() {
-  }
-
-  public MemberException(String message) {
-    super(message);
+  public MemberException(ErrorCode errorCode) {
+    super(errorCode);
   }
 }

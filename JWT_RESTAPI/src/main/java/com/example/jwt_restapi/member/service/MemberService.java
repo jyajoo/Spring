@@ -1,5 +1,6 @@
 package com.example.jwt_restapi.member.service;
 
+import static com.example.jwt_restapi.base.exception.ErrorCode.*;
 import com.example.jwt_restapi.base.exception.MemberException;
 import com.example.jwt_restapi.member.dto.LoginRequest;
 import com.example.jwt_restapi.member.entity.Member;
@@ -46,11 +47,11 @@ public class MemberService {
   public JwtDto login(LoginRequest loginRequest) {
 
     Member member = memberRepository.findMemberByUsername(loginRequest.getUsername())
-        .orElseThrow(() -> new MemberException("회원이 존재하지 않습니다."));
+        .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
     if (member == null || !passwordEncoder.matches(loginRequest.getPassword(),
         member.getPassword())) {
-      throw new MemberException("아이디 또는 비밀번호가 옳지 않습니다.");
+      throw new MemberException(AUTHENTICATION_FAILED);
     }
 
     String accessToken = jwtProvider.generateAccessToken(member);
@@ -72,10 +73,10 @@ public class MemberService {
   public JwtDto reissue(String refreshToken) {
     String token = jwtProvider.resolveToken(refreshToken);
     Member member = memberRepository.findByRefreshToken(token)
-        .orElseThrow(() -> new MemberException("RefreshToken이 유효하지 않습니다."));
+        .orElseThrow(() -> new MemberException(INVALID_TOKEN));
 
     if (!jwtProvider.verifyRefreshToken(token)) {
-      throw new MemberException("RefreshToken이 만료되었습니다.");
+      throw new MemberException(INVALID_TOKEN);
     }
 
     String accessToken = jwtProvider.generateAccessToken(member);

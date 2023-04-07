@@ -1,11 +1,8 @@
 package com.example.jwt_restapi.base.exception;
 
-public class BoardException extends RuntimeException{
+public class BoardException extends CustomException{
 
-  public BoardException() {
-  }
-
-  public BoardException(String message) {
-    super(message);
+  public BoardException(ErrorCode errorCode) {
+    super(errorCode);
   }
 }

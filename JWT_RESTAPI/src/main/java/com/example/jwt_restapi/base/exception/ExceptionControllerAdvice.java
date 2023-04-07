@@ -34,8 +34,14 @@ public class ExceptionControllerAdvice {
   }
 
   @ExceptionHandler({MemberException.class, BoardException.class})
-  public ResponseEntity<RsData<Object>> exceptionHandling(Exception e) {
+  public ResponseEntity<RsData<Object>> handleCustomException(CustomException e) {
 
+    return ResponseEntity.status(e.getErrorCode().getStatus())
+        .body(RsData.of(ResultCode.FAIL, e.getErrorCode().getMsg(), null));
+  }
+
+  @ExceptionHandler({Exception.class})
+  public ResponseEntity<RsData<Object>> handleException(Exception e) {
     return ResponseEntity.badRequest()
         .body(RsData.of(ResultCode.FAIL, e.getMessage(), null));
   }

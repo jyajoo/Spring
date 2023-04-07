@@ -1,5 +1,6 @@
 package com.example.jwt_restapi.board.service;
 
+import static com.example.jwt_restapi.base.exception.ErrorCode.*;
 import com.example.jwt_restapi.base.exception.BoardException;
 import com.example.jwt_restapi.board.dto.BoardDto;
 import com.example.jwt_restapi.board.dto.BoardUpdateRequest;
@@ -37,16 +38,16 @@ public class BoardService {
 
   public BoardDto getBoard(Long id) {
     Board board = boardRepository.findById(id)
-        .orElseThrow(() -> new BoardException("해당 게시물이 존재하지 않습니다."));
+        .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
 
     return BoardDto.from(board);
   }
 
   public void deleteBoard(MemberContext memberContext, Long id) {
     Board board = boardRepository.findById(id)
-        .orElseThrow(() -> new BoardException("해당 게시물이 존재하지 않습니다."));
+        .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
     if (isNotBoardCreatedByMember(memberContext, board)) {
-      throw new BoardException("해당 게시물을 삭제할 수 없습니다.");
+      throw new BoardException(BOARD_AUTHOR_MISMATCH);
     }
 
     boardRepository.delete(board);
@@ -59,9 +60,9 @@ public class BoardService {
   @Transactional
   public BoardDto updateBoard(MemberContext memberContext, Long id, BoardUpdateRequest boardUpdateRequest) {
     Board board = boardRepository.findById(id)
-        .orElseThrow(() -> new BoardException("해당 게시물이 존재하지 않습니다."));
+        .orElseThrow(() -> new BoardException(MEMBER_NOT_FOUND));
     if (isNotBoardCreatedByMember(memberContext, board)) {
-      throw new BoardException("해당 게시물을 수정할 수 없습니다.");
+      throw new BoardException(BOARD_AUTHOR_MISMATCH);
     }
 
     board.update(boardUpdateRequest);
