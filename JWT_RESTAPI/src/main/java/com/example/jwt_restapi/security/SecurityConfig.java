@@ -26,7 +26,7 @@ public class SecurityConfig {
     http
         .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
             .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
-            .requestMatchers("/member/join", "/member/login").permitAll()
+            .requestMatchers("/member/join", "/member/login", "/member/reissue").permitAll()
             .anyRequest().authenticated())
         .cors().disable()       // 타 도메인에서 API 접근 허용
         .csrf().disable()       // CSRF 토큰 기능 사용 X

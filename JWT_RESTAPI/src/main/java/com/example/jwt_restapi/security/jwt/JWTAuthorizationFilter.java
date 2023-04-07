@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
@@ -45,11 +46,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     log.info("JWTAuthorizationFilter 실행");
 
     String bearerToken = request.getHeader("Authorization");
+    String token = jwtProvider.resolveToken(bearerToken);
 
-    if (bearerToken != null) {
-      String token = bearerToken.substring("Bearer ".length());
-
-      if (jwtProvider.verifyToken(token)) {
+    if (StringUtils.hasLength(token) && jwtProvider.verifyAccessToken(token)) {
         Claims claims = jwtProvider.getClaims(token);
         String memberId = claims.getSubject();
         Member member = memberService.findMemberById(Long.valueOf(memberId))
@@ -60,7 +59,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }
       }
-    }
     chain.doFilter(request, response);
   }
 }

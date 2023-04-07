@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,12 +60,26 @@ public class MemberService {
     return JwtDto.from(member);
   }
 
-  @Cacheable(value = "member")
   public Optional<Member> findMemberById(Long id) {
     return memberRepository.findMemberById(id);
   }
 
   public boolean verifyWithMemberToken(Member member, String token) {
     return member.getAccessToken().equals(token);
+  }
+
+  @Transactional
+  public JwtDto reissue(String refreshToken) {
+    String token = jwtProvider.resolveToken(refreshToken);
+    Member member = memberRepository.findByRefreshToken(token)
+        .orElseThrow(() -> new MemberException("RefreshToken이 유효하지 않습니다."));
+
+    if (!jwtProvider.verifyRefreshToken(token)) {
+      throw new MemberException("RefreshToken이 만료되었습니다.");
+    }
+
+    String accessToken = jwtProvider.generateAccessToken(member);
+    member.setAccessToken(accessToken);
+    return JwtDto.from(member);
   }
 }

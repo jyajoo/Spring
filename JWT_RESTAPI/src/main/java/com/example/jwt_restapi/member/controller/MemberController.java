@@ -10,11 +10,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,5 +47,14 @@ public class MemberController {
 
     return ResponseEntity.ok()
         .body(RsData.of(ResultCode.SUCCESS, "현재 로그인한 회원 정보", memberContext));
+  }
+
+  @GetMapping("/reissue")
+  @Operation(summary = "AccessToken 재발행 기능", description = "RefreshToken으로 AccessToken을 재발행합니다.")
+  public ResponseEntity<RsData<JwtDto>> reissue(
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
+    JwtDto jwtDto = memberService.reissue(refreshToken);
+    return ResponseEntity.ok()
+        .body(RsData.of(ResultCode.SUCCESS, "재발행된 AccessToken", jwtDto));
   }
 }
